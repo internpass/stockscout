@@ -3,6 +3,13 @@
 **A pay-per-report research agent for Coinbase tokenized stocks on Base.**
 Built for **Base Stocks Maxxing Season — Agentic Stock Finance track**.
 
+- 🌐 Live showcase: https://internpass.github.io/stockscout/
+- 📜 FeeSplitter (Base Sepolia, Sourcify exact match): `0x551f5d693Da23430a2dCaEF69D998dd5520D35A8`
+  - deploy tx: `0xd8fd9c72edd9dd31d3de9f96ec33377fe30735d58b2188e8059217d0d8bedad0`
+  - ops wallet: `0x00202bb9d5905dac371ae16db12ea91d79cda5a0` · allocation vault: `0x2B80663EF06487414893E5B7dd0806262B846F5A`
+- 🖥️ The showcase runs on a data snapshot + live in-browser Chainlink reads; the full agent
+  server (`node src/server.mjs`) serves live API data and settles over x402.
+
 StockScout sells one thing: trustworthy research on tokenized stocks. Anyone (human or agent)
 picks a ticker, pays a **0.10 USDC micropayment over x402**, and receives a research brief whose
 price data is **verified twice** — once from the Coinbase Tokenized Stocks API and once from the
