@@ -1,0 +1,1 @@
+{"description":"Pay-per-report research agent for Coinbase tokenized stocks on Base — x402 micropayments, dual-source verified prices, 30/70 fee allocation.","engines":{"node":">=20"},"license":"MIT","name":"stockscout","scripts":{"report":"node scripts/report.mjs","start":"node src/server.mjs"},"type":"module","version":"0.1.0"}

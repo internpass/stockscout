@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockScout — Pay-per-report research agent for tokenized stocks on Base</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="logo">🔭 StockScout</div>
+  <div class="tag">Pay-per-report research agent · Coinbase tokenized stocks (B20) on Base · x402 micropayments</div>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>Live board — reference values, dual-source verified</h2>
+    <p class="muted">Prices are Chainlink total-return reference values (24/5 feeds), cross-checked between the
+    Coinbase Tokenized Stocks API and onchain feed reads. Stale or disagreeing data is flagged, never hidden.</p>
+    <div id="board" class="grid">Loading live data…</div>
+  </section>
+
+  <section class="panel" id="reportPanel" hidden>
+    <h2 id="reportTitle">Report</h2>
+    <div id="teaser"></div>
+    <div id="paybox">
+      <button id="payBtn">Unlock full report — 0.10 USDC via x402 (Base Sepolia demo)</button>
+      <span id="payStatus" class="muted"></span>
+    </div>
+    <div id="full"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Allocation ledger — where the fees go</h2>
+    <p class="muted">Every settled report fee is split by the published rule: <b>30% agent operations / 70% tokenized-stock allocation</b>.
+    The FeeSplitter contract mirrors this split onchain.</p>
+    <div id="ledger">No payments yet.</div>
+  </section>
+
+  <footer class="muted">
+    Research information only — not financial advice. Tokenized stocks are available only to persons in eligible
+    jurisdictions outside the U.S. Built for Base Stocks Maxxing Season — Agentic Stock Finance track.
+  </footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
