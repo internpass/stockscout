@@ -3,24 +3,74 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StockScout — Pay-per-report research agent for tokenized stocks on Base</title>
+<title>StockScout — Verified research for tokenized stocks on Base</title>
+<meta name="description" content="Pay-per-report research agent for Coinbase tokenized stocks on Base. Every price verified twice: Tokenized Stocks API × Chainlink onchain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <div class="logo">🔭 StockScout</div>
-  <div class="tag">Pay-per-report research agent · Coinbase tokenized stocks (B20) on Base · x402 micropayments</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#">
+      <span class="brand-mark">S</span>
+      <span class="brand-name">Stock<em>Scout</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="#board-section">Live Board</a>
+      <a href="#how">How it works</a>
+      <a href="#ledger-section">Allocation Ledger</a>
+    </div>
+    <div class="nav-badge"><span class="dot"></span> Base · Stocks Maxxing</div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-in">
+    <div class="eyebrow">AGENTIC STOCK FINANCE · BASE</div>
+    <h1>Research you can<br><span class="gold">verify, twice.</span></h1>
+    <p class="tag">Pay-per-report research agent · Coinbase tokenized stocks (B20) on Base · x402 micropayments</p>
+    <p class="hero-sub">Every brief cross-checks the Coinbase Tokenized Stocks API against the Chainlink feed read directly onchain. If the sources disagree or go stale, the report says so — flags are shown, never hidden.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#board-section">Explore the live board</a>
+      <a class="btn btn-ghost" href="https://github.com/internpass/stockscout" target="_blank" rel="noopener">View the code ↗</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">378</div><div class="stat-l">Tokenized stocks tracked</div></div>
+      <div class="stat"><div class="stat-n">13</div><div class="stat-l">Dual-source verified feeds</div></div>
+      <div class="stat"><div class="stat-n">$0.10</div><div class="stat-l">Per report, via x402</div></div>
+      <div class="stat"><div class="stat-n">30 / 70</div><div class="stat-l">Ops / stock allocation split</div></div>
+    </div>
+  </div>
 </header>
 
+<div class="trustbar">
+  <div class="trust-in">
+    <span>Dual-source verification</span><i>·</i>
+    <span>Chainlink read onchain</span><i>·</i>
+    <span>x402 micropayments</span><i>·</i>
+    <span>FeeSplitter — Sourcify exact match</span><i>·</i>
+    <span>Base Sepolia</span>
+  </div>
+</div>
+
 <main>
-  <section class="panel">
-    <h2>Live board — reference values, dual-source verified</h2>
-    <p class="muted">Prices are Chainlink total-return reference values (24/5 feeds), cross-checked between the
-    Coinbase Tokenized Stocks API and onchain feed reads. Stale or disagreeing data is flagged, never hidden.</p>
+  <section class="panel" id="board-section">
+    <div class="panel-head">
+      <div>
+        <div class="kicker">LIVE BOARD</div>
+        <h2>Reference values, dual-source verified</h2>
+      </div>
+      <div class="live-pill"><span class="dot"></span> Chainlink 24/5 feeds</div>
+    </div>
+    <p class="muted">Prices are Chainlink total-return reference values, cross-checked between the Coinbase Tokenized Stocks API and onchain feed reads. Select any ticker to open its research report.</p>
     <div id="board" class="grid">Loading live data…</div>
   </section>
 
-  <section class="panel" id="reportPanel" hidden>
+  <section class="panel report" id="reportPanel" hidden>
+    <div class="kicker">RESEARCH REPORT</div>
     <h2 id="reportTitle">Report</h2>
     <div id="teaser"></div>
     <div id="paybox">
@@ -30,16 +80,31 @@
     <div id="full"></div>
   </section>
 
-  <section class="panel">
-    <h2>Allocation ledger — where the fees go</h2>
-    <p class="muted">Every settled report fee is split by the published rule: <b>30% agent operations / 70% tokenized-stock allocation</b>.
-    The FeeSplitter contract mirrors this split onchain.</p>
+  <section class="panel" id="how">
+    <div class="kicker">HOW IT WORKS</div>
+    <h2>Three steps, fully onchain</h2>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><h3>Pick a ticker</h3><p>Choose from the live board of Coinbase tokenized stocks trading on Base.</p></div>
+      <div class="step"><div class="step-n">02</div><h3>Pay 0.10 USDC via x402</h3><p>The full brief is gated by an HTTP 402 micropayment — no account, no subscription.</p></div>
+      <div class="step"><div class="step-n">03</div><h3>Fees split 30 / 70</h3><p>Every fee is split by a published rule: 30% agent operations, 70% into tokenized-stock allocation, mirrored onchain by FeeSplitter.</p></div>
+    </div>
+  </section>
+
+  <section class="panel" id="ledger-section">
+    <div class="panel-head">
+      <div>
+        <div class="kicker">TRANSPARENCY</div>
+        <h2>Allocation ledger — where the fees go</h2>
+      </div>
+    </div>
+    <p class="muted">Every settled report fee is split by the published rule: <b>30% agent operations / 70% tokenized-stock allocation</b>. The FeeSplitter contract mirrors this split onchain — <a href="https://sourcify.dev/#/lookup/0x551f5d693Da23430a2dCaEF69D998dd5520D35A8" target="_blank" rel="noopener">0x551f…D35A8, verified ↗</a></p>
     <div id="ledger">No payments yet.</div>
   </section>
 
-  <footer class="muted">
-    Research information only — not financial advice. Tokenized stocks are available only to persons in eligible
-    jurisdictions outside the U.S. Built for Base Stocks Maxxing Season — Agentic Stock Finance track.
+  <footer>
+    <div class="foot-brand">Stock<em>Scout</em></div>
+    <p>Research information only — not financial advice. Tokenized stocks are available only to persons in eligible jurisdictions outside the U.S. Reference values are total-return NAVs, not live execution quotes.</p>
+    <p class="muted">Built for Base Stocks Maxxing Season — Agentic Stock Finance track.</p>
   </footer>
 </main>
 <script src="app.js"></script>
