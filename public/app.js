@@ -17,6 +17,18 @@ const FEEDS = {
   TSLA: "0xFaf869185383a24F8cb00e27BdA6b63B9905DCb4",
 };
 
+const DOMAINS = {
+  AAPL: "apple.com", AMZN: "amazon.com", ANT: "anthropic.com", CRCL: "circle.com",
+  GOOGL: "google.com", INTC: "intel.com", META: "meta.com", MSFT: "microsoft.com",
+  MSTR: "microstrategy.com", NVDA: "nvidia.com", SNDK: "sandisk.com",
+  SPCX: "spacex.com", TSLA: "tesla.com",
+};
+const logoUrl = (t) => `logos/${t}.png`;
+const logoImg = (t) =>
+  `<img class="logo-img" src="${logoUrl(t)}" alt="${t} logo" loading="lazy" onerror="this.onerror=null;this.src='https://icons.duckduckgo.com/ip3/${DOMAINS[t] ?? ""}.ico';this.onerror=()=>this.remove();">`;
+const logoTile = (t, cls = "") =>
+  `<span class="logo-tile ${cls}"><span class="mono">${t.slice(0, 2)}</span>${logoImg(t)}</span>`;
+
 const fmt = (n, d = 2) =>
   n == null ? "—" : Number(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
 
@@ -45,20 +57,41 @@ async function loadBoard() {
       }));
     document.querySelector(".tag").textContent += " · public showcase (snapshot data, live onchain feed checks)";
   }
+  ALL_STOCKS = stocks.filter((s) => s.navPrice != null).slice(0, 24);
+  renderBoard();
+}
+
+let ALL_STOCKS = [];
+
+function renderBoard() {
   const el = $("#board");
+  const q = ($("#searchBox")?.value ?? "").trim().toLowerCase();
+  const sort = $("#sortSel")?.value ?? "price-desc";
+  let shown = ALL_STOCKS.filter((s) => !q || s.ticker.toLowerCase().includes(q) || (s.name ?? "").toLowerCase().includes(q));
+  shown = shown.slice().sort((a, b) =>
+    sort === "price-asc" ? a.navPrice - b.navPrice :
+    sort === "name" ? a.ticker.localeCompare(b.ticker) :
+    sort === "supply" ? (b.totalSupply ?? 0) - (a.totalSupply ?? 0) :
+    b.navPrice - a.navPrice);
   el.innerHTML = "";
-  const shown = stocks.filter((s) => s.navPrice != null).slice(0, 24);
   for (const s of shown) {
     const card = document.createElement("button");
     card.className = "card";
-    card.innerHTML = `<div class="sym">${s.ticker} <span class="muted">${s.tokenSymbol}</span></div>
+    card.innerHTML = `
+      <div class="card-top">${logoTile(s.ticker)}
+        <div class="card-id"><div class="sym">${s.ticker}</div><div class="tsym">${s.tokenSymbol}</div></div>
+        <span class="pill ${s.hasFeed ? "pill-feed" : "pill-api"}">${s.hasFeed ? "Chainlink" : "API NAV"}</span>
+      </div>
       <div class="name">${s.name}</div>
       <div class="price">$${fmt(s.navPrice)}</div>
-      <div class="meta">${s.hasFeed ? "⛓ Chainlink feed" : "API NAV"} · supply ${fmt(s.totalSupply, 0)} · ×${fmt(s.multiplier, 4)}</div>`;
+      <div class="meta"><span>Supply ${fmt(s.totalSupply, 0)} tokens</span><span>Multiplier ×${fmt(s.multiplier, 4)}</span></div>
+      <div class="card-cta">Open research report <span aria-hidden="true">→</span></div>`;
     card.onclick = () => openReport(s.ticker);
     el.appendChild(card);
   }
-  if (!shown.length) el.textContent = "No NAV data right now — feeds hold the last close outside market hours.";
+  const cnt = $("#boardCount");
+  if (cnt) cnt.textContent = `${shown.length} of ${ALL_STOCKS.length} listed`;
+  if (!shown.length) el.innerHTML = `<p class="muted">${ALL_STOCKS.length ? "No ticker matches your search." : "No NAV data right now — feeds hold the last close outside market hours."}</p>`;
 }
 
 // ---- static-mode report engine (mirrors src/agent.mjs) ----
@@ -107,6 +140,15 @@ function staticReport(stock, feed) {
   };
 }
 
+function verifyGrid(p) {
+  const dev = p.deviationPct == null ? "—" : fmt(p.deviationPct, 3) + "%";
+  return `<div class="verify-grid">
+    <div class="vbox"><div class="vlabel">Tokenized Stocks API</div><div class="vprice">$${fmt(p.apiNav)}</div><div class="vsub">Reference NAV</div></div>
+    <div class="vmid"><div class="vbadge ${p.verified ? "ok" : "warn"}">${p.verified ? "✓ VERIFIED" : "! CHECK FLAGS"}</div><div class="vdev">deviation ${dev}</div></div>
+    <div class="vbox"><div class="vlabel">Chainlink · read onchain</div><div class="vprice">$${fmt(p.chainlink)}</div><div class="vsub">Total-return feed, Base mainnet</div></div>
+  </div>`;
+}
+
 let staticCurrentReport = null;
 
 async function openReport(ticker) {
@@ -121,10 +163,8 @@ async function openReport(ticker) {
     const r = await fetch(`/api/report/${ticker}`);
     const t = await r.json();
     $("#teaser").innerHTML = `
-      <p>${t.headline}</p>
-      <p>Reference value: <b>$${fmt(t.price.apiNav)}</b> · Chainlink onchain: <b>$${fmt(t.price.chainlink)}</b> ·
-      deviation ${t.price.deviationPct == null ? "—" : fmt(t.price.deviationPct, 3) + "%"} ·
-      ${t.price.verified ? "✅ dual-source verified & fresh" : "⚠️ check flags in the full report"}</p>
+      <div class="rep-head">${logoTile(ticker, "lg")}<p class="rep-lede">${t.headline}</p></div>
+      ${verifyGrid(t.price)}
       <p class="muted">Locked in the full report: ${t.locked.join(" · ")}</p>`;
   } else {
     const stock = SNAPSHOT.find((s) => s.underlying === ticker);
@@ -133,10 +173,8 @@ async function openReport(ticker) {
     staticCurrentReport = staticReport(stock, feed);
     const t = staticCurrentReport;
     $("#teaser").innerHTML = `
-      <p>${t.brief[0]}</p>
-      <p>Reference value: <b>$${fmt(t.price.apiNav)}</b> · Chainlink onchain (read live in your browser): <b>$${fmt(t.price.chainlink)}</b> ·
-      deviation ${t.price.deviationPct == null ? "—" : fmt(t.price.deviationPct, 3) + "%"} ·
-      ${t.price.verified ? "✅ dual-source verified & fresh" : "⚠️ check flags in the full report"}</p>
+      <div class="rep-head">${logoTile(ticker, "lg")}<p class="rep-lede">${t.brief[0]}</p></div>
+      ${verifyGrid(t.price)}
       <p class="muted">Locked in the full report: Full research brief · Onchain float & NAV-cap analysis · Risk flags & staleness audit</p>`;
   }
   $("#reportPanel").scrollIntoView({ behavior: "smooth" });
@@ -144,7 +182,7 @@ async function openReport(ticker) {
 
 function renderFull(rep) {
   $("#full").innerHTML = `
-    <h3>${rep.name} (${rep.ticker}) — full brief</h3>
+    <div class="rep-head">${logoTile(rep.ticker, "lg")}<h3>${rep.name} (${rep.ticker}) — full brief</h3></div>
     ${rep.brief.map((l) => `<p>${l}</p>`).join("")}
     <h4>Risk & data-quality flags</h4>
     ${rep.flags.length ? `<ul>${rep.flags.map((f) => `<li>${f}</li>`).join("")}</ul>` : "<p>None — both sources agree and are fresh.</p>"}
@@ -207,6 +245,9 @@ async function loadLedger() {
       `<div class="led">📄 ${a.ticker} report — fee split: $${fmt(a.allocationUsdc, 3)} → stock allocation, $${fmt(a.opsUsdc, 3)} → ops <span class="muted">${a.at}</span></div>`
     ).join("");
 }
+
+$("#searchBox")?.addEventListener("input", renderBoard);
+$("#sortSel")?.addEventListener("change", renderBoard);
 
 loadBoard();
 loadLedger();

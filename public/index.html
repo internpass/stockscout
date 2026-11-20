@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
@@ -29,13 +29,34 @@
 
 <header class="hero">
   <div class="hero-in">
-    <div class="eyebrow">AGENTIC STOCK FINANCE · BASE</div>
-    <h1>Research you can<br><span class="gold">verify, twice.</span></h1>
-    <p class="tag">Pay-per-report research agent · Coinbase tokenized stocks (B20) on Base · x402 micropayments</p>
-    <p class="hero-sub">Every brief cross-checks the Coinbase Tokenized Stocks API against the Chainlink feed read directly onchain. If the sources disagree or go stale, the report says so — flags are shown, never hidden.</p>
-    <div class="hero-cta">
-      <a class="btn btn-gold" href="#board-section">Explore the live board</a>
-      <a class="btn btn-ghost" href="https://github.com/internpass/stockscout" target="_blank" rel="noopener">View the code ↗</a>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow">AGENTIC STOCK FINANCE · BASE</div>
+        <h1>Research you can<br><span class="gold">verify, twice.</span></h1>
+        <p class="tag">Pay-per-report research agent · Coinbase tokenized stocks (B20) on Base · x402 micropayments</p>
+        <p class="hero-sub">Every brief cross-checks the Coinbase Tokenized Stocks API against the Chainlink feed read directly onchain. If the sources disagree or go stale, the report says so — flags are shown, never hidden.</p>
+        <div class="hero-cta">
+          <a class="btn btn-gold" href="#board-section">Explore the live board</a>
+          <a class="btn btn-ghost" href="https://github.com/internpass/stockscout" target="_blank" rel="noopener">View the code ↗</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hv-card">
+          <div class="hv-head">
+            <span class="logo-tile lg"><span class="mono">NV</span><img class="logo-img" src="logos/NVDA.png" alt="" loading="lazy" onerror="this.remove()"></span>
+            <div><div class="hv-ticker">NVDA · NVIDIA Corporation</div><div class="hv-sub">Research report · NVDAc on Base</div></div>
+            <span class="hv-badge">✓ Verified</span>
+          </div>
+          <div class="hv-price">$145.40</div>
+          <div class="hv-rows">
+            <div class="hv-row"><span>Tokenized Stocks API</span><b>$145.40</b></div>
+            <div class="hv-row"><span>Chainlink · onchain</span><b>$145.40</b></div>
+            <div class="hv-row"><span>Deviation</span><b class="hv-ok">0.000%</b></div>
+          </div>
+          <div class="hv-split"><div class="hv-split-l">Fee split</div><div class="hv-bar"><span class="hv-bar-ops"></span><span class="hv-bar-alloc"></span></div><div class="hv-split-r">30% ops · 70% allocation</div></div>
+          <div class="hv-foot">Paid via x402 · 0.10 USDC · Base Sepolia</div>
+        </div>
+      </div>
     </div>
     <div class="stats">
       <div class="stat"><div class="stat-n">378</div><div class="stat-l">Tokenized stocks tracked</div></div>
@@ -66,7 +87,24 @@
       <div class="live-pill"><span class="dot"></span> Chainlink 24/5 feeds</div>
     </div>
     <p class="muted">Prices are Chainlink total-return reference values, cross-checked between the Coinbase Tokenized Stocks API and onchain feed reads. Select any ticker to open its research report.</p>
+    <div class="toolbar">
+      <label class="search"><span class="search-ic">⌕</span><input id="searchBox" type="search" placeholder="Search ticker or company — e.g. Tesla" autocomplete="off"></label>
+      <select id="sortSel" aria-label="Sort board">
+        <option value="price-desc">Price · high to low</option>
+        <option value="price-asc">Price · low to high</option>
+        <option value="name">Ticker · A–Z</option>
+        <option value="supply">Supply · largest first</option>
+      </select>
+      <span id="boardCount" class="board-count"></span>
+    </div>
     <div id="board" class="grid">Loading live data…</div>
+  </section>
+
+  <section class="features">
+    <div class="feature"><div class="f-ic">⛨</div><h3>Dual-source by default</h3><p>API NAV and the Chainlink feed must agree within 0.5% — otherwise the report is flagged, not sold as verified.</p></div>
+    <div class="feature"><div class="f-ic">◷</div><h3>Staleness, disclosed</h3><p>Feeds run 24/5 while tokens trade 24/7. Report timestamps and freshness bounds are printed on every brief.</p></div>
+    <div class="feature"><div class="f-ic">⬡</div><h3>x402 native</h3><p>No accounts or subscriptions. An HTTP 402, a 0.10 USDC micropayment, and the report unlocks.</p></div>
+    <div class="feature"><div class="f-ic">▦</div><h3>Onchain fee split</h3><p>Fees split 30/70 by a published rule, mirrored by a verified FeeSplitter contract on Base Sepolia.</p></div>
   </section>
 
   <section class="panel report" id="reportPanel" hidden>
@@ -107,6 +145,6 @@
     <p class="muted">Built for Base Stocks Maxxing Season — Agentic Stock Finance track.</p>
   </footer>
 </main>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
